@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,51 +44,61 @@ namespace VendingMachine
             Console.WriteLine($"You have inserted : {accumulatedMoney} kr.");
         }
 
+        // Method to display the available items in the vending machine
         public void ShowItems()
         {
             Console.WriteLine("Available items:");
+
+            // Loop through each item in the Items list
             for (int i = 0; i < Items.Count; i++)
             {
+                // Print the item number (i + 1), name, price, and stock amount
                 Console.WriteLine($"{i + 1}. {Items[i].Name} - Price: {Items[i].Price} kr. - In stock: {Items[i].StockAmount}");
-
             }
         }
 
+
+        // Method to handle the purchase of an item based on user choice
         public void BuyItem(int choice)
         {
-            if(choice < 1 || choice > Items.Count)
+            // Check if the user's choice is valid (within the range of available items)
+            if (choice < 1 || choice > Items.Count)
             {
                 Console.WriteLine("Invalid choice");
                 return;
             }
 
+            // Get the selected item based on the user's choice
             Item selectedItem = Items[choice - 1];
 
+            // Check if the selected item is sold out
             if (selectedItem.StockAmount == 0)
             {
-                Console.WriteLine("This item is sold out"); 
-                return;
+                Console.WriteLine("This item is sold out"); // Notify the user that the item is out of stock
+                return; // Exit the method if the item is not available
             }
 
-            if(accumulatedMoney >= selectedItem.Price)
+            // Check if the user has enough money to buy the selected item
+            if (accumulatedMoney >= selectedItem.Price)
             {
-                selectedItem.StockAmount --;
-                accumulatedMoney -= selectedItem.Price;
-                Console.WriteLine($"You have bought {selectedItem.Name}. Remaining money: {accumulatedMoney} kr.");
+                selectedItem.StockAmount--; // Decrease the stock amount of the selected item by 1
+                accumulatedMoney -= selectedItem.Price; // Deduct the item price from the accumulated money
+                Console.WriteLine($"You have bought {selectedItem.Name}. Remaining money: {accumulatedMoney} kr."); // Confirm the purchase
 
-                if(accumulatedMoney > 0)
+                // Check if there is any remaining money after the purchase
+                if (accumulatedMoney > 0)
                 {
-                    Console.WriteLine($"You get {accumulatedMoney} kr. in return.");
-                    accumulatedMoney = 0;
+                    Console.WriteLine($"You get {accumulatedMoney} kr. in return."); // Notify the user about the return money
+                    accumulatedMoney = 0; // Reset accumulated money after returning the change
                 }
             }
-
             else
             {
-                Console.WriteLine($"You dont have enough money. {selectedItem.Name} costs {selectedItem.Price} kr., and you only have {accumulatedMoney} kr.");
+                // Notify the user that they do not have enough money for the selected item
+                Console.WriteLine($"You don't have enough money. {selectedItem.Name} costs {selectedItem.Price} kr., and you only have {accumulatedMoney} kr.");
             }
+        }
 
-        }  
 
         public void CancelPurchase()
         {
@@ -122,23 +132,30 @@ namespace VendingMachine
             }
         }
 
+        // Method to handle restocking of items in the vending machine
         private void RestockItems()
         {
             Console.WriteLine("Which item do you want to restock?");
-            ShowItems();
+            ShowItems(); // Display the current list of items to the user
+
+            // Read the user's choice for which item to restock
             int choice = int.Parse(Console.ReadLine());
 
+            // Check if the user's choice is valid (within the range of available items)
             if (choice < 1 || choice > Items.Count)
             {
-                Console.WriteLine("Invalid choice");
-                return;
+                Console.WriteLine("Invalid choice"); // Notify the user of an invalid selection
+                return; // Exit the method if the choice is invalid
             }
 
-            Console.WriteLine("How many do you want to add?");
-            int amount = int.Parse(Console.ReadLine());
+            Console.WriteLine("How many do you want to add?"); // Ask for the amount to restock
+            int amount = int.Parse(Console.ReadLine()); // Read the amount to add from the user
+
+            // Update the stock amount of the chosen item
             Items[choice - 1].StockAmount = amount;
-            Console.WriteLine($"{Items[choice - 1].Name} has now been restocked");
+            Console.WriteLine($"{Items[choice - 1].Name} has now been restocked"); // Confirm restocking
         }
+
 
         private void RemoveMoney()
         {
@@ -146,24 +163,30 @@ namespace VendingMachine
             accumulatedMoney = 0;
         }
 
+        // Method to adjust the price of a selected item in the vending machine
         private void AdjustPrice()
         {
-            Console.WriteLine("Hvilken vares pris vil du justere?");
-            ShowItems();
+            Console.WriteLine("Which item's price would you like to adjust?"); // Prompt user to select which item's price to adjust
+            ShowItems(); // Display the current list of items to the user
+
+            // Read the user's choice for which item's price to adjust
             int choice = int.Parse(Console.ReadLine());
 
-            if(choice < 1 || choice > Items.Count)
+            // Check if the user's choice is valid (within the range of available items)
+            if (choice < 1 || choice > Items.Count)
             {
-                Console.WriteLine("Invalid choice");
-                return;
+                Console.WriteLine("Invalid choice"); // Notify the user of an invalid selection
+                return; // Exit the method if the choice is invalid
             }
 
-            Console.WriteLine("Enter the new price:");
-            decimal newPrice = decimal.Parse(Console.ReadLine());
-            Items[choice - 1 ].Price = newPrice;
-            Console.WriteLine($"The price for {Items[choice - 1].Name} is now {newPrice} kr.");
+            Console.WriteLine("Enter the new price:"); // Tells user to enter the new price
+            decimal newPrice = decimal.Parse(Console.ReadLine()); // Read the new price from the user
 
+            // Update the price of the chosen item
+            Items[choice - 1].Price = newPrice;
+            Console.WriteLine($"The price for {Items[choice - 1].Name} is now {newPrice} kr."); // Confirm the price adjustment
         }
+
     }
 
 }
